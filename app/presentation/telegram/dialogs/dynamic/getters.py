@@ -13,7 +13,7 @@ from app.domain.message import Messages
 async def get_dynamic(dialog_manager: DialogManager, messages: FromDishka[Messages], **kwargs) -> dict[str, Any]:
     current_message_id = dialog_manager.dialog_data.get('id', 1)
     current_message = messages.get_message(current_message_id)
-    res = [ asdict(button) for button in current_message.buttons]
+    res = [ button.to_dict() for button in current_message.buttons]
     return {
         "buttons": res,
         "buttons_exits": len(res) > 0,

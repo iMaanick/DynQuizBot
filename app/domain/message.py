@@ -1,10 +1,13 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 
 
 @dataclass
 class Button:
     text: str
     target_message_id: int
+
+    def to_dict(self) -> dict:
+        return {"text": self.text, "target_message_id": self.target_message_id}
 
 
 @dataclass
