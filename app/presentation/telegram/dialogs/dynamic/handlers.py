@@ -18,8 +18,7 @@ async def on_button_click(callback: CallbackQuery, button: Button,
                           manager: SubManager) -> None:
     print(manager.item_id)
     manager.dialog_data['id'] = int(manager.item_id)
-    # print(manager.item_id)
-    # manager.dialog_data['id'] = manager.item_id
+
 
 
 @inject
@@ -32,5 +31,7 @@ async def on_input_text(
     print(message.text)
     current_message_id = manager.dialog_data.get('id')
     current_message = messages.get_message(current_message_id)
+    if not current_message.input_handler:
+        return
     manager.dialog_data[current_message.input_handler.key] = message.text
     manager.dialog_data['id'] = current_message.input_handler.target_message_id

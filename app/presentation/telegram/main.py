@@ -44,7 +44,7 @@ messages = [
 
 
 async def main() -> None:
-    setup_logging()
+    # setup_logging()
     logger = logging.getLogger(__name__)
     load_dotenv()
     token = AiogramSettings().token
