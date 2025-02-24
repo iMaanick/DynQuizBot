@@ -22,6 +22,7 @@ class Message:
     text: str
     command: str | None = None
     buttons: list[Button] = field(default_factory=list)
+    button_width: int | None = None
     input_handler: TextHandler | None = None
 
 

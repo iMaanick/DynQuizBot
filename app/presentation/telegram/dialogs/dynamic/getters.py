@@ -16,5 +16,5 @@ async def get_dynamic(dialog_manager: DialogManager, messages: FromDishka[Messag
         "buttons": res,
         "buttons_exits": len(res) > 0,
         "text": current_message.text,
-        "width": 2
+        "button_width": current_message.button_width
     }

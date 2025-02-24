@@ -25,7 +25,7 @@ dynamic_dialog = Dialog(
                 item_id_getter=lambda item: item['target_message_id'],
                 when='buttons_exits'
             ),
-            width= F.func(lambda data: data["width"])
+            width=F.func(lambda data: data["button_width"])
         ),
         MessageInput(on_input_text, content_types=[ContentType.TEXT]),
         getter=get_dynamic,

@@ -20,10 +20,13 @@ messages = [
     Message(message_id=1, text="Welcome to the bot!", command="/start", buttons=[
         Button(text="Next", target_message_id=2)
     ]),
-    Message(message_id=2, text="This is the second message.", buttons=[
-        Button(text="Go back", target_message_id=1),
-        Button(text="Continue", target_message_id=3)
-    ]),
+    Message(message_id=2,
+            text="This is the second message.",
+            buttons=[
+                Button(text="Go back", target_message_id=1),
+                Button(text="Continue", target_message_id=3)
+            ],
+            button_width=2),
     Message(message_id=3, text="Final message.", input_handler=TextHandler(key="user_input", target_message_id=2))
 ]
 
