@@ -17,17 +17,29 @@ from app.presentation.telegram.dialogs import setup_all_dialogs
 from app.presentation.telegram.handlers import setup_handlers
 
 messages = [
-    Message(message_id=1, text="Welcome to the bot!", command="/start", buttons=[
-        Button(text="Next", target_message_id=2)
-    ]),
-    Message(message_id=2,
-            text="This is the second message.",
-            buttons=[
-                Button(text="Go back", target_message_id=1),
-                Button(text="Continue", target_message_id=3)
-            ],
-            button_width=2),
-    Message(message_id=3, text="Final message.", input_handler=TextHandler(key="user_input", target_message_id=2))
+    Message(
+        message_id=1,
+        text="Welcome to the bot!",
+        command="start",
+        buttons=[
+            Button(text="Next", target_message_id=2)
+        ]
+    ),
+    Message(
+        message_id=2,
+        text="This is the second message.",
+        buttons=[
+            Button(text="Go back", target_message_id=1),
+            Button(text="Continue", target_message_id=3)
+        ],
+        button_width=2,
+        command="second",
+    ),
+    Message(
+        message_id=3,
+        text="Final message.",
+        input_handler=TextHandler(key="user_input", target_message_id=2)
+    )
 ]
 
 
@@ -44,7 +56,7 @@ async def main() -> None:
     )
 
     logger.info('Setting up handlers, dialogs, and commands.')
-    setup_handlers(dp)
+    setup_handlers(dp, messages)
     setup_all_dialogs(dp)
     await setup_commands(bot)
 

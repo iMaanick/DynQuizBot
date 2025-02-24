@@ -29,6 +29,7 @@ async def on_input_text(
         manager: DialogManager,
         messages: FromDishka[Messages],
 ) -> None:
+    print(message.text)
     current_message_id = manager.dialog_data.get('id')
     current_message = messages.get_message(current_message_id)
     manager.dialog_data[current_message.input_handler.key] = message.text
