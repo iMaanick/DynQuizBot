@@ -33,5 +33,5 @@ async def on_input_text(
     current_message = messages.get_message(current_message_id)
     if not current_message.input_handler:
         return
-    manager.dialog_data[current_message.input_handler.key] = message.text
+    manager.dialog_data["input_data"][current_message.input_handler.key] = message.text
     manager.dialog_data['id'] = current_message.input_handler.target_message_id

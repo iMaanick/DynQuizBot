@@ -38,7 +38,11 @@ messages = [
     Message(
         message_id=3,
         text="Final message.",
-        input_handler=TextHandler(key="user_input", target_message_id=2)
+        input_handler=TextHandler(key="user_input", target_message_id=4)
+    ),
+    Message(
+        message_id=4,
+        text="REAL Final message.Your text {user_input}",
     )
 ]
 
