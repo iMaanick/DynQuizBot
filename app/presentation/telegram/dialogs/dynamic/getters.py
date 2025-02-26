@@ -17,7 +17,6 @@ async def get_dynamic(dialog_manager: DialogManager, messages: FromDishka[Messag
     res = [button.to_dict() for button in current_message.buttons]
     return {
         "buttons": res,
-        "buttons_exits": len(res) > 0,
         "text": current_message.text.format_map(dialog_manager.dialog_data["input_data"]), # можно перехватывать ошибку, но мне пока лень
         "button_width": current_message.button_width
     }
