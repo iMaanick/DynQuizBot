@@ -45,7 +45,7 @@ function App() {
 
   const handleSend = async () => {
     try {
-      const response = await fetch('/res', {
+      const response = await fetch('http://localhost:8000/res', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
