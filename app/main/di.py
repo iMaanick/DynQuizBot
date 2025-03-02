@@ -1,7 +1,5 @@
 from aiogram.types import TelegramObject, User
 from dishka import Scope, Provider, provide
-from faststream import FastStream
-from faststream.rabbit import RabbitBroker
 
 from app.domain.message import Message, Messages
 
@@ -25,4 +23,4 @@ class DialogDataProvider(Provider):
             message_data[message.message_id] = message
         return message_data
 
-    messages = provide(Messages, scope=Scope.REQUEST)
+    messages = provide(Messages, scope=Scope.APP)

@@ -27,7 +27,13 @@ class Message:
 
 
 class Messages:
-    def __init__(self, message_data: dict[int, Message]):
+    def __init__(self, message_data: dict[int, Message]) -> None:
+        self.messages = message_data
+
+    def update(self, messages: list[Message]) -> None:
+        message_data: dict[int, Message] = {}
+        for message in messages:
+            message_data[message.message_id] = message
         self.messages = message_data
 
     def get_message(self, message_id: int) -> Message:
