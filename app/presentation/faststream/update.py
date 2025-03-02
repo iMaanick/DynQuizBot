@@ -1,7 +1,8 @@
+from adaptix._internal.conversion.facade.func import get_converter
 from dishka import FromDishka
 from faststream.rabbit import RabbitRouter
 from faststream.rabbit.annotations import RabbitBroker
-from app. domain import message
+from app.domain import message
 from app.application.models.message import Message
 
 update_router = RabbitRouter()
@@ -13,6 +14,6 @@ async def update(
         message_data: list[Message],
         messages: FromDishka[message.Messages],
         broker: RabbitBroker,
-
 ) -> None:
-    messages.update(message_data)
+    converter = get_converter(list[Message], list[message.Message])
+    messages.update(converter(message_data))
