@@ -1,5 +1,7 @@
 from aiogram.types import TelegramObject, User
 from dishka import Scope, Provider, provide
+from faststream import FastStream
+from faststream.rabbit import RabbitBroker
 
 from app.domain.message import Message, Messages
 
