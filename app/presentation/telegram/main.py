@@ -68,10 +68,10 @@ async def main() -> None:
 
     logger.info('Setting up handlers, dialogs, and commands.')
     setup_handlers(dp, messages)
-    setup_all_dialogs(dp)
+    bg_factory = setup_all_dialogs(dp)
     await setup_commands(bot)
 
-    container = make_async_container(AiogramProvider(), DialogDataProvider(messages))
+    container = make_async_container(AiogramProvider(), DialogDataProvider(messages, bg_factory, bot))
     setup_dishka(container=container, router=dp)
     faststream = get_faststream_app(container)
     logger.info(f'Bot started. {await bot.get_me()}')

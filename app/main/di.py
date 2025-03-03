@@ -1,4 +1,7 @@
+from aiogram import Bot
 from aiogram.types import TelegramObject, User
+from aiogram_dialog import BgManagerFactory, BaseDialogManager
+from aiogram_dialog.manager.bg_manager import BgManager
 from dishka import Scope, Provider, provide
 
 from app.domain.message import Message, Messages
@@ -6,9 +9,11 @@ from app.domain.user_set import UserSet
 
 
 class DialogDataProvider(Provider):
-    def __init__(self, message_data: list[Message]):
+    def __init__(self, message_data: list[Message], bg_factory: BgManagerFactory, bot: Bot, ) -> None:
         super().__init__()
         self.message_data = message_data
+        self.bg_factory = bg_factory
+        self.bot = bot
 
     @provide(scope=Scope.APP)
     async def message_data(self) -> dict[int, Message]:
@@ -24,5 +29,9 @@ class DialogDataProvider(Provider):
     @provide(scope=Scope.APP)
     async def user_set(self) -> UserSet:
         return UserSet()
+
+    @provide(scope=Scope.REQUEST)
+    async def get_bg(self, user: User) -> BaseDialogManager:
+        return self.bg_factory.bg(bot=self.bot, user_id=user.id, chat_id=user.id)
 
     messages = provide(Messages, scope=Scope.APP)
