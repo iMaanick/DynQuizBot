@@ -13,7 +13,7 @@ from faststream import FastStream
 from app.application.models.config import AiogramSettings
 from app.domain.message import Message, Button, TextHandler
 from app.infrastructure.logging import setup_logging
-from app.main.di import UserProvider, DialogDataProvider
+from app.main.di import DialogDataProvider
 from app.main.faststream import get_faststream_app
 from app.presentation.telegram.commands import setup_commands
 from app.presentation.telegram.dialogs import setup_all_dialogs
@@ -71,7 +71,7 @@ async def main() -> None:
     setup_all_dialogs(dp)
     await setup_commands(bot)
 
-    container = make_async_container(AiogramProvider(), UserProvider(), DialogDataProvider(messages))
+    container = make_async_container(AiogramProvider(), DialogDataProvider(messages))
     setup_dishka(container=container, router=dp)
     faststream = get_faststream_app(container)
     logger.info(f'Bot started. {await bot.get_me()}')
