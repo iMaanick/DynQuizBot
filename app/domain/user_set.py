@@ -3,13 +3,13 @@ from aiogram.types import User
 
 class UserSet:
     def __init__(self):
-        self._user_ids = set()
+        self._users = set()
 
     def add(self, user: User) -> None:
-        self._user_ids.add(user.id)
+        self._users.add(user)
 
     def remove(self, user: User) -> None:
-        self._user_ids.discard(user.id)
+        self._users.discard(user)
 
-    def get_all_user_id(self) -> set[int]:
-        return self._user_ids.copy()
+    def get_all_users(self) -> set[User]:
+        return self._users.copy()

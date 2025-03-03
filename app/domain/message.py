@@ -39,3 +39,9 @@ class Messages:
     def get_message(self, message_id: int) -> Message:
         print(self.messages.keys())
         return self.messages[message_id]
+
+    def get_start_message(self) -> Message | None:
+        for message in self.messages.values():
+            if message.command == "start":
+                return message
+        return None

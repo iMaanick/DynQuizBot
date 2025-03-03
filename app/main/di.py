@@ -31,7 +31,11 @@ class DialogDataProvider(Provider):
         return UserSet()
 
     @provide(scope=Scope.REQUEST)
-    async def get_bg(self, user: User) -> BaseDialogManager:
-        return self.bg_factory.bg(bot=self.bot, user_id=user.id, chat_id=user.id)
+    async def get_bg_factory(self) -> BgManagerFactory:
+        return self.bg_factory
+
+    @provide(scope=Scope.APP)
+    async def get_bot(self) -> Bot:
+        return self.bot
 
     messages = provide(Messages, scope=Scope.APP)
