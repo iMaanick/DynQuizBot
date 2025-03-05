@@ -3,12 +3,12 @@ import React, { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 
 function MessageNode({ data }) {
-  const { message_id, text, command, buttons, input_handler } = data;
+  const { message_id, text, command, buttons, input_handler, button_width } = data;
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-4 border-2 border-gray-200 min-w-[200px]">
       <Handle type="target" position={Position.Top} />
-      
+
       {/* Message ID and Command */}
       <div className="flex justify-between items-center mb-2">
         <span className="font-bold text-sm">ID: {message_id}</span>
@@ -26,7 +26,7 @@ function MessageNode({ data }) {
       {buttons && buttons.length > 0 && (
         <div className="space-y-2">
           <div className="text-xs font-semibold text-gray-500">Buttons:</div>
-          <div className="flex flex-col gap-3 relative pb-8">
+          <div className={`grid grid-cols-${button_width || 1} gap-3 relative pb-8`}>
             {buttons.map((button, index) => (
               <div
                 key={index}

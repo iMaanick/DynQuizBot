@@ -45,6 +45,7 @@ export const processMessages = (messages) => {
       position: { x: index * 300, y: index * 100 }, // Initial positioning
       data: {
         ...message,
+        button_width: message.button_width || 1,
         buttons: message.buttons?.map((button, buttonIndex) => ({
           ...button,
           color: getButtonColor(button.text, usedColors),

@@ -64,7 +64,8 @@ npm run dev
         "target_message_id": 3
       }
     ],
-    "command": "/start"
+    "command": "/start",
+    "button_width": 2
   },
   {
     "message_id": 2,
