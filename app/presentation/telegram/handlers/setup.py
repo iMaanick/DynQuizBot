@@ -6,5 +6,5 @@ from app.presentation.telegram.handlers.start import setup_start
 
 
 def setup_handlers(dp: Dispatcher, messages: list[Message]) -> None:
-    setup_start(dp, messages)
+    setup_start(dp)
     setup_handle_error(dp)

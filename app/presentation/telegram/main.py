@@ -23,7 +23,7 @@ messages = [
     Message(
         message_id=1,
         text="Welcome to the bot!",
-        command="start",
+        command="/start",
         buttons=[
             Button(text="Next", target_message_id=2)
         ]
@@ -36,7 +36,7 @@ messages = [
             Button(text="Continue", target_message_id=3)
         ],
         button_width=2,
-        command="second",
+        command="/second",
     ),
     Message(
         message_id=3,
