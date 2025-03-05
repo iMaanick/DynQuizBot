@@ -64,7 +64,7 @@ npm run dev
         "target_message_id": 3
       }
     ],
-    "command": "start"
+    "command": "/start"
   },
   {
     "message_id": 2,
@@ -91,7 +91,7 @@ npm run dev
 ]
 
 ```
-
+![img.png](example_front.png)
 ### **Структура JSON-сообщений**
 
 JSON представляет собой список объектов Message, где каждое сообщение содержит:
