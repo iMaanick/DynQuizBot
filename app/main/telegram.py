@@ -13,7 +13,7 @@ from app.application.models.config import AiogramSettings
 from app.domain.button import Button
 from app.domain.message import Message
 from app.domain.text_handler import TextHandler
-from app.main.di import DialogDataProvider
+from app.main.di import DialogDataProvider, TelegramBotUseCaseProvider
 from app.main.faststream import create_faststream_app
 from app.presentation.telegram.commands import setup_commands
 from app.presentation.telegram.dialogs import setup_all_dialogs
@@ -71,7 +71,8 @@ async def main() -> None:
     bg_factory = setup_all_dialogs(dp)
     await setup_commands(bot)
 
-    container = make_async_container(AiogramProvider(), DialogDataProvider(messages, bg_factory, bot))
+    container = make_async_container(AiogramProvider(), DialogDataProvider(messages, bg_factory, bot),
+                                     TelegramBotUseCaseProvider(), )
     setup_dishka(container=container, router=dp)
     faststream = create_faststream_app(container)
     logger.info(f'Bot started. {await bot.get_me()}')
