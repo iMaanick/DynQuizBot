@@ -2,6 +2,8 @@ from aiogram import Bot
 from aiogram.types import TelegramObject, User
 from aiogram_dialog import BgManagerFactory
 from dishka import Scope, Provider, provide
+from fastapi import Request
+from faststream.rabbit import RabbitBroker
 
 from app.domain.message import Message, Messages
 from app.domain.user_set import UserSet
@@ -38,3 +40,9 @@ class DialogDataProvider(Provider):
         return self.bot
 
     messages = provide(Messages, scope=Scope.APP)
+
+
+class BrokerProvider(Provider):
+    @provide(scope=Scope.REQUEST)
+    async def get_broker(self, request: Request) -> RabbitBroker:
+        return request.state.broker

@@ -1,7 +1,12 @@
+from contextlib import asynccontextmanager
+
+from dishka import make_async_container
+from dishka.integrations.fastapi import FastapiProvider, setup_dishka
 from fastapi import FastAPI
 from faststream.rabbit import fastapi
 from starlette.middleware.cors import CORSMiddleware
 
+from app.main.di import BrokerProvider
 from app.presentation.fastapi.root import root_router
 
 
@@ -11,8 +16,13 @@ def init_routers(app: FastAPI):
     app.include_router(router)
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    await app.state.dishka_container.close()
+
 def create_app() -> FastAPI:
-    app = FastAPI()
+    app = FastAPI(lifespan=lifespan)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["http://localhost:5173"],
@@ -21,4 +31,6 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     init_routers(app)
+    container = make_async_container(BrokerProvider(), FastapiProvider())
+    setup_dishka(container=container, app=app)
     return app

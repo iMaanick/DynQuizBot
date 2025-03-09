@@ -17,7 +17,6 @@ update_router = RabbitRouter()
 async def update(
         message_data: list[Message],
         messages: FromDishka[message.Messages],
-        broker: RabbitBroker,
         user_set: FromDishka[UserSet],
         bot: FromDishka[Bot],
         bg_factory: FromDishka[BgManagerFactory],
