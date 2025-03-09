@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import AsyncGenerator
 
 import pytest
 from aiogram import Dispatcher
@@ -8,12 +9,21 @@ from aiogram_dialog.api.internal import FakeUser
 from aiogram_dialog.test_tools import MockMessageManager
 from aiogram_dialog.test_tools.bot_client import FakeBot
 from aiogram_dialog.test_tools.memory_storage import JsonMemoryStorage
-from faststream.rabbit import RabbitBroker
+from asgi_lifespan import LifespanManager
+from dishka import make_async_container, Provider, provide, Scope
+from dishka.integrations.fastapi import FastapiProvider, setup_dishka
+from fastapi import FastAPI
+from faststream.rabbit import RabbitBroker, fastapi, TestRabbitBroker
 from faststream.testing.broker import TestBroker
+from starlette.testclient import TestClient
 
 from app.application.models.message import TextHandler
 from app.domain.button import Button
 from app.domain.message import Message
+from app.main import create_app
+from app.main.di import FastApiUseCaseProvider
+from app.main.fastapi import init_routers
+from app.presentation.fastapi.root import root_router
 from app.presentation.telegram.dialogs import setup_all_dialogs
 from app.presentation.telegram.handlers import setup_handlers
 
@@ -58,8 +68,9 @@ def fake_user() -> FakeUser:
 
 @pytest.fixture()
 async def test_broker(broker):
-      async with TestBroker(broker) as br:
-          yield br
+    async with TestBroker(broker) as br:
+        yield br
+
 
 @dataclass
 class MockData:
@@ -67,6 +78,7 @@ class MockData:
     bg_factory: BgManagerFactory
     bot: FakeBot
     broker: RabbitBroker
+
 
 @pytest.fixture(scope="function")
 def message_manager() -> MockMessageManager:
@@ -84,3 +96,34 @@ async def test_data(fake_user: FakeUser, ) -> MockData:
     broker = RabbitBroker()
     return MockData(dp, bg_factory, bot, broker)
 
+
+class BrokerProvider(Provider):
+
+    def __init__(self, broker: RabbitBroker):
+        self.broker = broker
+        super().__init__()
+
+    @provide(scope=Scope.REQUEST)
+    async def get_broker(self) -> RabbitBroker:
+        return self.broker
+
+
+@pytest.fixture
+async def client_fastapi() -> AsyncGenerator[TestClient, None]:
+    router = fastapi.RabbitRouter("amqp://guest:guest@localhost:5672/")
+    app = FastAPI()
+
+    app.include_router(router)
+
+    async with TestRabbitBroker(router.broker) as br:
+        app.state.broker = br
+        app.include_router(root_router)
+
+        container = make_async_container(
+            BrokerProvider(br),
+            FastapiProvider(),
+            FastApiUseCaseProvider(),
+        )
+        setup_dishka(container, app)
+        async with LifespanManager(app):
+            yield TestClient(app)
