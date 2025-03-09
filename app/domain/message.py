@@ -1,19 +1,7 @@
 from dataclasses import dataclass, field
 
-
-@dataclass
-class Button:
-    text: str
-    target_message_id: int
-
-    def to_dict(self) -> dict:
-        return {"text": self.text, "target_message_id": self.target_message_id}
-
-
-@dataclass
-class TextHandler:
-    key: str
-    target_message_id: int
+from app.domain.button import Button
+from app.domain.text_handler import TextHandler
 
 
 @dataclass

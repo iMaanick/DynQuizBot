@@ -12,7 +12,8 @@ from dishka import Provider, provide, Scope, make_async_container
 from dishka.integrations.aiogram import AiogramProvider, setup_dishka
 
 from app.application.models.message import TextHandler
-from app.domain.message import Message, Button, Messages
+from app.domain.message import Message, Messages
+from app.domain.button import Button
 from app.domain.user_set import UserSet
 from app.presentation.telegram.dialogs import setup_all_dialogs
 from app.presentation.telegram.handlers import setup_handlers

@@ -10,7 +10,9 @@ from dotenv import load_dotenv
 from faststream import FastStream
 
 from app.application.models.config import AiogramSettings
-from app.domain.message import Message, Button, TextHandler
+from app.domain.message import Message
+from app.domain.text_handler import TextHandler
+from app.domain.button import Button
 from app.main.di import DialogDataProvider
 from app.main.faststream import create_faststream_app
 from app.presentation.telegram.commands import setup_commands

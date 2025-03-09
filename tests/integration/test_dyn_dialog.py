@@ -2,7 +2,6 @@ import asyncio
 
 import pytest
 from aiogram_dialog import setup_dialogs
-from aiogram_dialog.api.internal import FakeUser
 from aiogram_dialog.test_tools import BotClient, MockMessageManager
 
 

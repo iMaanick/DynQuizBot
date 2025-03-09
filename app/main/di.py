@@ -1,7 +1,6 @@
 from aiogram import Bot
 from aiogram.types import TelegramObject, User
-from aiogram_dialog import BgManagerFactory, BaseDialogManager
-from aiogram_dialog.manager.bg_manager import BgManager
+from aiogram_dialog import BgManagerFactory
 from dishka import Scope, Provider, provide
 
 from app.domain.message import Message, Messages
