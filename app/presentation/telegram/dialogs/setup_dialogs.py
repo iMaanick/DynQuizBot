@@ -1,7 +1,7 @@
 from aiogram import Dispatcher, Router
 from aiogram_dialog import setup_dialogs, BgManagerFactory
 
-from app.presentation.telegram.dialogs.dynamic.dynamic_dialog import setup_dynamic_dialog
+from app.presentation.telegram.dialogs.dialogs.dynamic_dialog import setup_dynamic_dialog
 
 
 def setup_all_dialogs(dp: Dispatcher) -> BgManagerFactory:

@@ -34,7 +34,6 @@ class Messages:
         self.command_to_message = command_to_message
 
     def get_message(self, message_id: int) -> Message:
-        print(self.messages.keys())
         return self.messages[message_id]
 
     def get_start_message(self) -> Message | None:

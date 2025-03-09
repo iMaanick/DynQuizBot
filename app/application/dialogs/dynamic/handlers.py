@@ -12,8 +12,11 @@ from app.domain.message import Messages
 logger = logging.getLogger(__name__)
 
 
-async def on_button_click(callback: CallbackQuery, button: Button,
-                          manager: SubManager) -> None:
+async def on_button_click(
+        callback: CallbackQuery,
+        button: Button,
+        manager: SubManager,
+) -> None:
     manager.dialog_data['id'] = int(manager.item_id)
 
 

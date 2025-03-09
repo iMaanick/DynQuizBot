@@ -49,8 +49,10 @@ class BrokerProvider(Provider):
     async def get_broker(self, request: Request) -> RabbitBroker:
         return request.state.broker
 
+
 class FastApiUseCaseProvider(Provider):
     use_case = provide(PublishMessagesUseCase, scope=Scope.REQUEST)
+
 
 class TelegramBotUseCaseProvider(Provider):
     use_case = provide(UpdateMessagesUseCase, scope=Scope.REQUEST)

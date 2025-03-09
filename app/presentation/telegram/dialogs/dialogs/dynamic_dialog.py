@@ -6,8 +6,8 @@ from aiogram_dialog.widgets.kbd import ListGroup, Button
 from aiogram_dialog.widgets.text import Format
 
 from app.application.widgets.dynamic_group import DynamicGroup
-from app.presentation.telegram.dialogs.dynamic.getters import get_dynamic
-from app.presentation.telegram.dialogs.dynamic.handlers import on_button_click, on_input_text
+from app.application.dialogs.dynamic.getters import get_dynamic
+from app.application.dialogs.dynamic.handlers import on_button_click, on_input_text
 from app.presentation.telegram.states import Dynamic
 
 dynamic_dialog = Dialog(
