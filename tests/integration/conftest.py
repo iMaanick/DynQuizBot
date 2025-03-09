@@ -1,60 +1,18 @@
-from unittest.mock import AsyncMock
-
 import pytest
-from aiogram import Bot, Dispatcher
+from aiogram import Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.types import TelegramObject, User
-from aiogram_dialog import BgManagerFactory
 from aiogram_dialog.api.internal import FakeUser
 from aiogram_dialog.test_tools import BotClient
 from aiogram_dialog.test_tools.bot_client import FakeBot
-from dishka import Provider, provide, Scope, make_async_container
+from dishka import make_async_container
 from dishka.integrations.aiogram import AiogramProvider, setup_dishka
 
 from app.application.models.message import TextHandler
-from app.domain.message import Message, Messages
 from app.domain.button import Button
-from app.domain.user_set import UserSet
+from app.domain.message import Message
+from app.main.di import DialogDataProvider
 from app.presentation.telegram.dialogs import setup_all_dialogs
 from app.presentation.telegram.handlers import setup_handlers
-
-
-class FakeProvider(Provider):
-    def __init__(
-            self,
-            message_data: list[Message],
-            bg_factory: BgManagerFactory,
-            bot: Bot,
-    ) -> None:
-        super().__init__()
-        self.message_data = message_data
-        self.bg_factory = bg_factory
-        self.bot = bot
-
-    @provide(scope=Scope.APP)
-    async def message_data(self) -> dict[int, Message]:
-        message_data: dict[int, Message] = {}
-        for message in self.message_data:
-            message_data[message.message_id] = message
-        return message_data
-
-    @provide(scope=Scope.REQUEST)
-    async def get_user(self, obj: TelegramObject) -> User:
-        return obj.from_user
-
-    @provide(scope=Scope.APP)
-    async def user_set(self) -> UserSet:
-        return UserSet()
-
-    @provide(scope=Scope.REQUEST)
-    async def get_bg_factory(self) -> BgManagerFactory:
-        return self.bg_factory
-
-    @provide(scope=Scope.APP)
-    async def get_bot(self) -> Bot:
-        return self.bot
-
-    messages = provide(Messages, scope=Scope.APP)
 
 
 @pytest.fixture(scope='package')
@@ -103,6 +61,6 @@ def mock_client(messages: list[Message], fake_user: FakeUser) -> BotClient:
     bot = FakeBot()
     setup_handlers(dp, messages)
     bg_factory = setup_all_dialogs(dp)
-    container = make_async_container(AiogramProvider(), FakeProvider(messages, bg_factory, bot))
+    container = make_async_container(AiogramProvider(), DialogDataProvider(messages, bg_factory, bot))
     setup_dishka(container=container, router=dp)
     return BotClient(dp, bot=bot)
