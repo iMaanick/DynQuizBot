@@ -47,6 +47,11 @@ npm install
 npm run dev
 ```
 
+### **4. Тесты**
+```python
+pytest --cov=app --cov-report=term-missing tests\integration
+```
+
 ### **Пример JSON для визуализации**
 
 ```json
