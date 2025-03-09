@@ -1,7 +1,7 @@
 import logging
 
-from aiogram import Dispatcher, Router
-from aiogram.filters import Command, ExceptionTypeFilter
+from aiogram import Dispatcher
+from aiogram.filters import ExceptionTypeFilter
 from aiogram_dialog import DialogManager
 from aiogram_dialog.api.exceptions import UnknownIntent, UnknownState
 

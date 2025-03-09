@@ -1,7 +1,7 @@
 from typing import Any
 
 from aiogram.types import User
-from aiogram_dialog import DialogManager, BaseDialogManager
+from aiogram_dialog import DialogManager
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
 
