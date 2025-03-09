@@ -1,6 +1,5 @@
 import asyncio
 import logging
-from functools import partial
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
@@ -12,9 +11,8 @@ from faststream import FastStream
 
 from app.application.models.config import AiogramSettings
 from app.domain.message import Message, Button, TextHandler
-from app.infrastructure.logging import setup_logging
 from app.main.di import DialogDataProvider
-from app.main.faststream import get_faststream_app
+from app.main.faststream import create_faststream_app
 from app.presentation.telegram.commands import setup_commands
 from app.presentation.telegram.dialogs import setup_all_dialogs
 from app.presentation.telegram.handlers import setup_handlers
@@ -73,7 +71,7 @@ async def main() -> None:
 
     container = make_async_container(AiogramProvider(), DialogDataProvider(messages, bg_factory, bot))
     setup_dishka(container=container, router=dp)
-    faststream = get_faststream_app(container)
+    faststream = create_faststream_app(container)
     logger.info(f'Bot started. {await bot.get_me()}')
 
     try:

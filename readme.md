@@ -37,7 +37,7 @@ uvicorn --factory app.main:create_app --host localhost --port 8000
 ### **2. Телеграм-бот (aiogram-dialog с FastStream)**
 
 ```bash
-python -m app.presentation.telegram.main
+python -m app.main.telegram
 ```
 
 ### **3. Фронтенд (React)**

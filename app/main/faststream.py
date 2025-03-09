@@ -6,7 +6,7 @@ from faststream.rabbit import RabbitBroker
 from app.presentation.faststream.update import update_router
 
 
-def get_faststream_app(container: AsyncContainer) -> FastStream:
+def create_faststream_app(container: AsyncContainer) -> FastStream:
     broker = RabbitBroker("amqp://guest:guest@localhost:5672/")
     broker.include_router(update_router)
     faststream_app = FastStream(broker)
