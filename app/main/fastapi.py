@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from faststream.rabbit import fastapi
 from starlette.middleware.cors import CORSMiddleware
 
-from app.main.di import BrokerProvider
+from app.main.di import BrokerProvider, UseCaseProvider
 from app.presentation.fastapi.root import root_router
 
 
@@ -21,6 +21,7 @@ async def lifespan(app: FastAPI):
     yield
     await app.state.dishka_container.close()
 
+
 def create_app() -> FastAPI:
     app = FastAPI(lifespan=lifespan)
     app.add_middleware(
@@ -31,6 +32,6 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     init_routers(app)
-    container = make_async_container(BrokerProvider(), FastapiProvider())
+    container = make_async_container(BrokerProvider(), FastapiProvider(), UseCaseProvider())
     setup_dishka(container=container, app=app)
     return app

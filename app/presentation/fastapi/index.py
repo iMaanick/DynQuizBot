@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 
+from adaptix._internal.conversion.facade.func import get_converter
 from dishka import FromDishka
 from dishka.integrations.fastapi import inject
 from fastapi import APIRouter
-from faststream.rabbit import RabbitBroker
 
 from app.application.models.message import Message
+from app.application.use_cases.update_messages import UpdateMessagesUseCase, UpdateMessagesIntputDTO
+from app.domain import message
 
 index_router = APIRouter()
 
@@ -19,10 +21,12 @@ class UpdateResponse:
 @inject
 async def update_messages(
         messages: list[Message],
-        broker: FromDishka[RabbitBroker],
+        use_case: FromDishka[UpdateMessagesUseCase],
 ) -> UpdateResponse:
-    await broker.publish(
-        [message.model_dump() for message in messages],
-        queue="update"
+    converter = get_converter(list[Message], list[message.Message])
+    await use_case(
+        UpdateMessagesIntputDTO(
+            converter(messages)
+        )
     )
     return UpdateResponse("messages published")
