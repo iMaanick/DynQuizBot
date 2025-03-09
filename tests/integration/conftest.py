@@ -1,21 +1,24 @@
+from dataclasses import dataclass
+
 import pytest
 from aiogram import Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram_dialog import BgManagerFactory
 from aiogram_dialog.api.internal import FakeUser
-from aiogram_dialog.test_tools import BotClient
+from aiogram_dialog.test_tools import MockMessageManager
 from aiogram_dialog.test_tools.bot_client import FakeBot
-from dishka import make_async_container
-from dishka.integrations.aiogram import AiogramProvider, setup_dishka
+from aiogram_dialog.test_tools.memory_storage import JsonMemoryStorage
+from faststream.rabbit import RabbitBroker
+from faststream.testing.broker import TestBroker
 
 from app.application.models.message import TextHandler
 from app.domain.button import Button
 from app.domain.message import Message
-from app.main.di import DialogDataProvider
 from app.presentation.telegram.dialogs import setup_all_dialogs
 from app.presentation.telegram.handlers import setup_handlers
 
 
-@pytest.fixture(scope='package')
+@pytest.fixture(scope="function")
 def messages() -> list[Message]:
     return [
         Message(
@@ -48,19 +51,36 @@ def messages() -> list[Message]:
     ]
 
 
-@pytest.fixture(scope='package')
+@pytest.fixture(scope='session')
 def fake_user() -> FakeUser:
     return FakeUser(id=321, is_bot=False, first_name='MNK', username='MNK')
 
 
-@pytest.fixture(scope='package')
-def mock_client(messages: list[Message], fake_user: FakeUser) -> BotClient:
+@pytest.fixture()
+async def test_broker(broker):
+      async with TestBroker(broker) as br:
+          yield br
+
+@dataclass
+class MockData:
+    dp: Dispatcher
+    bg_factory: BgManagerFactory
+    bot: FakeBot
+    broker: RabbitBroker
+
+@pytest.fixture(scope="function")
+def message_manager() -> MockMessageManager:
+    return MockMessageManager()
+
+
+@pytest.fixture(scope="session")
+async def test_data(fake_user: FakeUser, ) -> MockData:
     dp = Dispatcher(
-        storage=MemoryStorage(),
+        storage=JsonMemoryStorage(),
     )
     bot = FakeBot()
-    setup_handlers(dp, messages)
+    setup_handlers(dp)
     bg_factory = setup_all_dialogs(dp)
-    container = make_async_container(AiogramProvider(), DialogDataProvider(messages, bg_factory, bot))
-    setup_dishka(container=container, router=dp)
-    return BotClient(dp, bot=bot)
+    broker = RabbitBroker()
+    return MockData(dp, bg_factory, bot, broker)
+

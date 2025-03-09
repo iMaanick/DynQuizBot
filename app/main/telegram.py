@@ -67,7 +67,7 @@ async def main() -> None:
     )
 
     logger.info('Setting up handlers, dialogs, and commands.')
-    setup_handlers(dp, messages)
+    setup_handlers(dp)
     bg_factory = setup_all_dialogs(dp)
     await setup_commands(bot)
 
