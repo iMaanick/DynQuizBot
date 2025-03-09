@@ -5,7 +5,7 @@ from dishka import Scope, Provider, provide
 from fastapi import Request
 from faststream.rabbit import RabbitBroker
 
-from app.application.use_cases.update_messages import UpdateMessagesUseCase
+from app.application.use_cases.publish_messages import PublishMessagesUseCase
 from app.domain.message import Message, Messages
 from app.domain.user_set import UserSet
 
@@ -48,5 +48,5 @@ class BrokerProvider(Provider):
     async def get_broker(self, request: Request) -> RabbitBroker:
         return request.state.broker
 
-class UseCaseProvider(Provider):
-    use_case = provide(UpdateMessagesUseCase, scope=Scope.REQUEST)
+class FastApiUseCaseProvider(Provider):
+    use_case = provide(PublishMessagesUseCase, scope=Scope.REQUEST)

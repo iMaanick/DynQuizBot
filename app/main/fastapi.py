@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from faststream.rabbit import fastapi
 from starlette.middleware.cors import CORSMiddleware
 
-from app.main.di import BrokerProvider, UseCaseProvider
+from app.main.di import BrokerProvider, FastApiUseCaseProvider
 from app.presentation.fastapi.root import root_router
 
 
@@ -32,6 +32,6 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     init_routers(app)
-    container = make_async_container(BrokerProvider(), FastapiProvider(), UseCaseProvider())
+    container = make_async_container(BrokerProvider(), FastapiProvider(), FastApiUseCaseProvider())
     setup_dishka(container=container, app=app)
     return app

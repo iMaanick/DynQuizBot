@@ -6,7 +6,7 @@ from dishka.integrations.fastapi import inject
 from fastapi import APIRouter
 
 from app.application.models.message import Message
-from app.application.use_cases.update_messages import UpdateMessagesUseCase, UpdateMessagesIntputDTO
+from app.application.use_cases.publish_messages import PublishMessagesUseCase, PublishMessagesIntputDTO
 from app.domain import message
 
 index_router = APIRouter()
@@ -21,11 +21,11 @@ class UpdateResponse:
 @inject
 async def update_messages(
         messages: list[Message],
-        use_case: FromDishka[UpdateMessagesUseCase],
+        use_case: FromDishka[PublishMessagesUseCase],
 ) -> UpdateResponse:
     converter = get_converter(list[Message], list[message.Message])
     await use_case(
-        UpdateMessagesIntputDTO(
+        PublishMessagesIntputDTO(
             converter(messages)
         )
     )

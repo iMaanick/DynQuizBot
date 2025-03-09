@@ -7,11 +7,11 @@ from app.domain.message import Message
 
 
 @dataclass
-class UpdateMessagesIntputDTO:
+class PublishMessagesIntputDTO:
     messages: list[Message]
 
 
-class UpdateMessagesUseCase:
+class PublishMessagesUseCase:
     def __init__(
             self,
             broker: RabbitBroker,
@@ -19,7 +19,7 @@ class UpdateMessagesUseCase:
         self.broker = broker
         self.retort = Retort()
 
-    async def __call__(self, data: UpdateMessagesIntputDTO) -> None:
+    async def __call__(self, data: PublishMessagesIntputDTO) -> None:
         await self.broker.publish(
             self.retort.dump(data.messages, list[Message]),
             queue="update"
