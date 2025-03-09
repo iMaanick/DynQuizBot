@@ -1,6 +1,8 @@
+from dataclasses import dataclass
+
 from dishka import FromDishka
 from dishka.integrations.fastapi import inject
-from fastapi import APIRouter, Request
+from fastapi import APIRouter
 from faststream.rabbit import RabbitBroker
 
 from app.application.models.message import Message
@@ -8,15 +10,19 @@ from app.application.models.message import Message
 index_router = APIRouter()
 
 
-@index_router.post("/res")
+@dataclass
+class UpdateResponse:
+    status: str
+
+
+@index_router.post("/res", response_model=UpdateResponse)
 @inject
-async def index(
-        request: Request,
+async def update_messages(
         messages: list[Message],
         broker: FromDishka[RabbitBroker],
-) -> dict:
+) -> UpdateResponse:
     await broker.publish(
         [message.model_dump() for message in messages],
         queue="update"
     )
-    return {"status": "messages published"}
+    return UpdateResponse("messages published")
