@@ -2,7 +2,7 @@ from aiogram.types import User
 
 
 class UserSet:
-    def __init__(self):
+    def __init__(self) -> None:
         self._users = set()
 
     def add(self, user: User) -> None:
