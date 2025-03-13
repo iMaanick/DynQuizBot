@@ -27,40 +27,40 @@ async def test_dyn_dialog(
     await asyncio.sleep(0.03)
 
     message = message_manager.last_message()
-    assert "Welcome to the bot!" in message.text
+    assert message.text == "Welcome to the bot!"
 
     await mock_client.send('lul')
     await asyncio.sleep(0.03)
     message = message_manager.last_message()
-    assert "Welcome to the bot!" == message.text
+    assert message.text == "Welcome to the bot!"
 
     callback_id = await mock_client.click(message, InlineButtonTextLocator('Next'))
     await asyncio.sleep(0.03)
     message_manager.assert_answered(callback_id)
     message = message_manager.last_message()
-    assert "This is the second message." == message.text
+    assert message.text == "This is the second message."
 
     callback_id = await mock_client.click(message, InlineButtonTextLocator('Go back'))
     await asyncio.sleep(0.03)
     message_manager.assert_answered(callback_id)
     message = message_manager.last_message()
-    assert "Welcome to the bot!" == message.text
+    assert message.text == "Welcome to the bot!"
 
     callback_id = await mock_client.click(message, InlineButtonTextLocator('Next'))
     await asyncio.sleep(0.03)
     message_manager.assert_answered(callback_id)
     message = message_manager.last_message()
-    assert "This is the second message." == message.text
+    assert message.text == "This is the second message."
 
     callback_id = await mock_client.click(message, InlineButtonTextLocator('Continue'))
     await asyncio.sleep(0.03)
     message_manager.assert_answered(callback_id)
     message = message_manager.last_message()
-    assert "Final message." == message.text
+    assert message.text == "Final message."
 
     await mock_client.send('MNK)))')
     await asyncio.sleep(0.03)
     message = message_manager.last_message()
-    assert "REAL Final message.Your text MNK" in message.text
+    assert message.text == "REAL Final message.Your text MNK)))"
     await container.close()
     message_manager.reset_history()
