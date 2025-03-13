@@ -2,12 +2,11 @@ from dataclasses import dataclass
 from typing import AsyncGenerator
 
 import pytest
-from aiogram import Dispatcher
-from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram_dialog import BgManagerFactory
+from aiogram import Dispatcher, Router
+from aiogram_dialog import BgManagerFactory, setup_dialogs
 from aiogram_dialog.api.internal import FakeUser
 from aiogram_dialog.test_tools import MockMessageManager
-from aiogram_dialog.test_tools.bot_client import FakeBot
+from aiogram_dialog.test_tools.bot_client import FakeBot, BotClient
 from aiogram_dialog.test_tools.memory_storage import JsonMemoryStorage
 from asgi_lifespan import LifespanManager
 from dishka import make_async_container, Provider, provide, Scope
@@ -20,11 +19,9 @@ from starlette.testclient import TestClient
 from app.application.models.message import TextHandler
 from app.domain.button import Button
 from app.domain.message import Message
-from app.main import create_app
 from app.main.di import FastApiUseCaseProvider
-from app.main.fastapi import init_routers
 from app.presentation.fastapi.root import root_router
-from app.presentation.telegram.dialogs import setup_all_dialogs
+from app.presentation.telegram.dialogs.dialogs.dynamic_dialog import setup_dynamic_dialog
 from app.presentation.telegram.handlers import setup_handlers
 
 
@@ -78,11 +75,8 @@ class MockData:
     bg_factory: BgManagerFactory
     bot: FakeBot
     broker: RabbitBroker
-
-
-@pytest.fixture(scope="function")
-def message_manager() -> MockMessageManager:
-    return MockMessageManager()
+    mock_client: BotClient
+    message_manager: MockMessageManager
 
 
 @pytest.fixture(scope="session")
@@ -92,9 +86,15 @@ async def test_data(fake_user: FakeUser, ) -> MockData:
     )
     bot = FakeBot()
     setup_handlers(dp)
-    bg_factory = setup_all_dialogs(dp)
+    dialog_router = Router()
+    setup_dynamic_dialog(dialog_router)
+    dp.include_router(dialog_router)
     broker = RabbitBroker()
-    return MockData(dp, bg_factory, bot, broker)
+    mock_client = BotClient(dp, bot=bot)
+    message_manager = MockMessageManager()
+    bg_factory = setup_dialogs(mock_client.dp, message_manager=message_manager)
+
+    return MockData(dp, bg_factory, bot, broker, mock_client, message_manager)
 
 
 class BrokerProvider(Provider):

@@ -1,8 +1,6 @@
 import asyncio
 
 import pytest
-from aiogram_dialog import setup_dialogs
-from aiogram_dialog.test_tools import BotClient, MockMessageManager
 from aiogram_dialog.test_tools.keyboard import InlineButtonTextLocator
 from dishka import make_async_container
 from dishka.integrations.aiogram import AiogramProvider, setup_dishka
@@ -16,7 +14,6 @@ from tests.integration.conftest import MockData
 async def test_dyn_dialog(
         test_data: MockData,
         messages: list[Message],
-        message_manager: MockMessageManager,
 ) -> None:
     container = make_async_container(
         AiogramProvider(),
@@ -24,11 +21,8 @@ async def test_dyn_dialog(
         TelegramBotUseCaseProvider(),
     )
     setup_dishka(container=container, router=test_data.dp)
-
-    mock_client = BotClient(test_data.dp, bot=test_data.bot)
-
-    setup_dialogs(mock_client.dp, message_manager=message_manager)
-
+    mock_client = test_data.mock_client
+    message_manager = test_data.message_manager
     await mock_client.send('/start')
     await asyncio.sleep(0.03)
 
@@ -68,3 +62,5 @@ async def test_dyn_dialog(
     await asyncio.sleep(0.03)
     message = message_manager.last_message()
     assert "REAL Final message.Your text MNK" in message.text
+    await container.close()
+    message_manager.reset_history()
